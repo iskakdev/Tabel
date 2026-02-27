@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('username', 'email', 'password', 'first_name', 'last_name',
@@ -39,23 +39,20 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id', 'full_name']
-
+        fields = ['first_name','last_name']
 
 class UserProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = '__all__'
-
-
-class UserProfileNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ['first_name','last_name']
-
 
 class MentorProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,7 +66,7 @@ class StudentProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'parent_name', 'parent_phone']
 
 
-class GroupSerialize(serializers.ModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'course_name', 'duration', 'mentor', 'study_days']
