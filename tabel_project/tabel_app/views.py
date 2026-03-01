@@ -1,5 +1,5 @@
 from .models import UserProfile, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
-from .serializers import (UserProfileSerializer, UserSerializer, UserProfileListSerializer,
+from .serializers import (UserProfileSerializer, UserProfileListSerializer,
                           UserProfileDetailSerializer, MentorProfileSerializer, StudentProfileSerializer,
                           GroupSerializer, LessonSerializer, LessonRecordSerializer, LoginSerializer)
 from rest_framework import viewsets, generics, status
@@ -18,9 +18,7 @@ class CustomLoginView(TokenObtainPairView):
         except Exception:
             return Response({"detail": "Неверные учетные данные"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        user = serializer.validated_data
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class LogoutView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
