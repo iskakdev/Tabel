@@ -24,15 +24,17 @@ class StudentProfile(UserProfile):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     parent_name = models.CharField(max_length=100)
     parent_phone = PhoneNumberField()
+    group = models.ForeignKey('Group', on_delete=models.CASCADE)
 
 
 class Group(models.Model):
     course_name = models.CharField(max_length=100)
-    duration = models.DateField()
     mentor = models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
     study_days = models.DateField()
 
+
 class Lesson(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
 
 
@@ -42,9 +44,4 @@ class Lesson(models.Model):
 class LessonRecord(models.Model):
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    grade = models.IntegerField(choices=[(i, str(i))for i in range(1,5)])
-    Attendance = (
-        ('Present', 'Present'),
-        ('Absent', 'Absent')
-    )
-    attendance = models.CharField(max_length=1, choices=Attendance)
+    grade = models.CharField(max_length=2)
