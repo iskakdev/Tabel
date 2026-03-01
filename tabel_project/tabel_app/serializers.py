@@ -5,18 +5,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ('username', 'email', 'password', 'first_name', 'last_name',
-                  'phone_number')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = UserProfile.objects.create_user(**validated_data)
-        return user
-
-
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -47,7 +35,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['first_name','last_name']
+        fields = ['full_name']
 
 class UserProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:

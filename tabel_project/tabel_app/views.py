@@ -8,16 +8,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class RegisterView(generics.CreateAPIView):
-    serializer_class = UserSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
 class CustomLoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
 
@@ -54,15 +44,11 @@ class UserProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
 
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileListSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
 
 class MentorProfileViewSet(viewsets.ModelViewSet):
     queryset = MentorProfile.objects.all()
@@ -89,4 +75,3 @@ class LessonViewSet(viewsets.ModelViewSet):
 class LessonRecordViewSet(viewsets.ModelViewSet):
     queryset = LessonRecord.objects.all()
     serializer_class = LessonRecordSerializer
-
