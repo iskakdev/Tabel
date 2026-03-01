@@ -9,21 +9,26 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
-    def validate(self, data):
-        user = authenticate(**data)
+    def validate(self, attrs):
+        user = authenticate(
+            username=attrs["username"],
+            password=attrs["password"],
+        )
         if user and user.is_active:
-            return user
+            attrs["user"] = user
+            return attrs
         raise serializers.ValidationError("Неверные учетные данные")
 
     def to_representation(self, instance):
-        refresh = RefreshToken.for_user(instance)
+        user = instance["user"]
+        refresh = RefreshToken.for_user(user)
         return {
-            'user': {
-                'username': instance.username,
-                'email': instance.email,
+            "user": {
+                "username": user.username,
+                "email": user.email,
             },
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
         }
 
 

@@ -8,6 +8,7 @@ class UserProfile(AbstractUser):
     UserRole = (
     ('MENTOR', 'MENTOR'),
     ('STUDENT', 'STUDENT'))
+    role = models.CharField(max_length=32, choices=UserRole)
 
 
 class MentorProfile(models.Model):
