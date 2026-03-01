@@ -6,45 +6,36 @@ from phonenumber_field.modelfields import PhoneNumberField
 class UserProfile(AbstractUser):
     full_name = models.CharField(max_length=100)
     UserRole = (
-    ('ADMIN', 'ADMIN'),
     ('MENTOR', 'MENTOR'),
     ('STUDENT', 'STUDENT'))
 
 
-class MentorProfile(UserProfile):
+class MentorProfile(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    SubjectChoices = (
-    ('Python', 'Python'),
-    ('AI', 'AI'),
-    ('FullStack', 'FullStack'),
-    ('Frontend', 'Frontend'))
-
-
-class StudentProfile(UserProfile):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    parent_name = models.CharField(max_length=100)
-    parent_phone = PhoneNumberField()
 
 
 class Group(models.Model):
     course_name = models.CharField(max_length=100)
-    duration = models.DateField()
     mentor = models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
     study_days = models.DateField()
 
-class Lesson(models.Model):
-    data = models.DateTimeField(auto_now=True)
 
+class StudentProfile(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    parent_name = models.CharField(max_length=100)
+    parent_phone = PhoneNumberField()
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+
+class Lesson(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    data = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.data
 
+
 class LessonRecord(models.Model):
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    grade = models.IntegerField(choices=[(i, str(i))for i in range(1,5)])
-    Attendance = (
-        ('Present', 'Present'),
-        ('Absent', 'Absent')
-    )
-    attendance = models.CharField(max_length=1, choices=Attendance)
+    grade = models.CharField(max_length=2)

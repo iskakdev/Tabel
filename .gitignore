@@ -1,5 +1,9 @@
-.idea/
-.vscode/
-.venv/
-__pycache__/
+<<<<<<< HEAD
 .env
+=======
+venv/
+__pycache__/
+*.pyc
+.env
+db.sqlite3
+>>>>>>> fb87146ce32e8088e6ce91c28d8703882a670b69
