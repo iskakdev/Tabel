@@ -33,15 +33,14 @@ class Group(models.Model):
     study_days = models.DateField()
 
 
-class Lesson(models.Model):
+class LessonDate(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return self.data
 
-class LessonRecord(models.Model):
+class LessonList(models.Model):
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(LessonDate, on_delete=models.CASCADE)
     grade = models.CharField(max_length=2)

@@ -47,22 +47,14 @@ class UserProfileAPIViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
-
 class UserProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
 
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileListSerializer
-
-    def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
 
 class MentorProfileViewSet(viewsets.ModelViewSet):
     queryset = MentorProfile.objects.all()
