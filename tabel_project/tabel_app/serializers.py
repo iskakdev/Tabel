@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (UserProfile, MentorProfile, StudentProfile, Group,
-                     Lesson, LessonRecord)
+                     LessonDate, LessonList)
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
@@ -74,11 +74,11 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Lesson
+        model = LessonDate
         fields = ['id', 'data']
 
 
 class LessonRecordSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LessonRecord
+        model = LessonList
         fields = '__all__'

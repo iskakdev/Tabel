@@ -1,5 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
+
+from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
 import os
 
@@ -133,3 +135,5 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
 }
+
+AUTH_USER_MODEL = 'tabel_app.UserProfile'

@@ -1,4 +1,4 @@
-from .models import UserProfile, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
+from .models import UserProfile, MentorProfile, StudentProfile, Group, LessonDate, LessonList
 from .serializers import (UserProfileSerializer, UserSerializer, UserProfileListSerializer,
                           UserProfileDetailSerializer, MentorProfileSerializer, StudentProfileSerializer,
                           GroupSerializer, LessonSerializer, LessonRecordSerializer, LoginSerializer)
@@ -75,10 +75,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 class LessonViewSet(viewsets.ModelViewSet):
-    queryset = Lesson.objects.all()
+    queryset = LessonDate.objects.all()
     serializer_class = LessonSerializer
 
 class LessonRecordViewSet(viewsets.ModelViewSet):
-    queryset = LessonRecord.objects.all()
+    queryset = LessonList.objects.all()
     serializer_class = LessonRecordSerializer
 
