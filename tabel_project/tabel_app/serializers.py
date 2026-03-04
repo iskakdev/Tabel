@@ -1,41 +1,34 @@
 from rest_framework import serializers
 from .models import (UserProfile, MentorProfile, StudentProfile, Group,
-                     LessonDate, LessonList)
+                     LessonRecord, Lesson)
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ('username', 'email', 'password', 'first_name', 'last_name',
-                  'phone_number')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = UserProfile.objects.create_user(**validated_data)
-        return user
 
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
-    def validate(self, data):
-        user = authenticate(**data)
+    def validate(self, attrs):
+        user = authenticate(
+            username=attrs["username"],
+            password=attrs["password"],
+        )
         if user and user.is_active:
-            return user
+            attrs["user"] = user
+            return attrs
         raise serializers.ValidationError("Неверные учетные данные")
 
     def to_representation(self, instance):
-        refresh = RefreshToken.for_user(instance)
+        user = instance["user"]
+        refresh = RefreshToken.for_user(user)
         return {
-            'user': {
-                'username': instance.username,
-                'email': instance.email,
+            "user": {
+                "username": user.username,
+                "email": user.email,
             },
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
         }
 
 
@@ -47,7 +40,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['first_name','last_name']
+        fields = ['full_name']
 
 class UserProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,11 +67,16 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LessonDate
+        model = Lesson
         fields = ['id', 'data']
 
 
 class LessonRecordSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LessonList
+        model = LessonRecord
+        fields = '__all__'
+
+
+class DifySerializer(serializers.ModelSerializer):
+    class Meta:
         fields = '__all__'

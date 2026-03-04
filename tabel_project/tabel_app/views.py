@@ -1,21 +1,11 @@
-from .models import UserProfile, MentorProfile, StudentProfile, Group, LessonDate, LessonList
-from .serializers import (UserProfileSerializer, UserSerializer, UserProfileListSerializer,
+from .models import UserProfile, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
+from .serializers import (UserProfileSerializer, UserProfileListSerializer,
                           UserProfileDetailSerializer, MentorProfileSerializer, StudentProfileSerializer,
                           GroupSerializer, LessonSerializer, LessonRecordSerializer, LoginSerializer)
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
-
-
-class RegisterView(generics.CreateAPIView):
-    serializer_class = UserSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CustomLoginView(TokenObtainPairView):
@@ -28,9 +18,7 @@ class CustomLoginView(TokenObtainPairView):
         except Exception:
             return Response({"detail": "Неверные учетные данные"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        user = serializer.validated_data
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class LogoutView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
@@ -47,6 +35,9 @@ class UserProfileAPIViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+    def get_queryset(self):
+        return UserProfile.objects.filter(id = self.request.user.id)
+
 class UserProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
@@ -55,6 +46,7 @@ class UserProfileDetailAPIView(generics.RetrieveAPIView):
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileListSerializer
+
 
 class MentorProfileViewSet(viewsets.ModelViewSet):
     queryset = MentorProfile.objects.all()
@@ -75,10 +67,9 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 class LessonViewSet(viewsets.ModelViewSet):
-    queryset = LessonDate.objects.all()
+    queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
 class LessonRecordViewSet(viewsets.ModelViewSet):
-    queryset = LessonList.objects.all()
+    queryset = LessonRecord.objects.all()
     serializer_class = LessonRecordSerializer
-
