@@ -60,6 +60,12 @@ class LessonRecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CreateLessonRecord(serializers.ModelSerializer):
+    class Meta:
+        model = LessonRecord
+        fields = '__all__'
+
+
 class LessonSerializer(serializers.ModelSerializer):
     lesson_list = LessonRecordSerializer(read_only=True, many=True)
     class Meta:

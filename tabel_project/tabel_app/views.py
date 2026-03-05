@@ -1,7 +1,7 @@
 from .models import Admin, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
 from .serializers import (AdminListSerializer,
                           AdminDetailSerializer, MentorProfileSerializer, StudentProfileSerializer,
-                          LessonSerializer, LessonRecordSerializer, LoginSerializer,
+                          LessonSerializer, LessonRecordSerializer, CreateLessonRecord, LoginSerializer,
                           GroupListSerializer, GroupDetailSerializer)
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
@@ -63,9 +63,16 @@ class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
-class LessonRecordViewSet(viewsets.ModelViewSet):
+
+class LessonRecordCreateAPIView(generics.CreateAPIView):
+    queryset = LessonRecord.objects.all()
+    serializer_class = CreateLessonRecord
+
+
+class LessonRecordEditAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = LessonRecord.objects.all()
     serializer_class = LessonRecordSerializer
+
 
 class GroupListAPIView(generics.ListAPIView):
     queryset = Group.objects.all()
