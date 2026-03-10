@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import (Admin, MentorProfile, StudentProfile, Group,
-                     Lesson, LessonRecord)
+from .models import MentorProfile, StudentProfile, Group, Lesson, LessonRecord, MonthlyReport
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
@@ -32,26 +31,20 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
-class AdminListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Admin
-        fields = ['full_name']
-
-class AdminDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Admin
-        fields = '__all__'
-
 class MentorProfileSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(source='user.get_full_name', read_only=True)
+
     class Meta:
         model = MentorProfile
-        fields = '__all__'
+        fields = ['id', 'user', 'full_name']
 
 
 class StudentProfileSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(source='user.get_full_name', read_only=True)
+
     class Meta:
         model = StudentProfile
-        fields = ['id', 'user', 'parent_name', 'parent_phone']
+        fields = ['id', 'user', 'full_name', 'parent_name', 'parent_phone']
 
 
 class LessonRecordSerializer(serializers.ModelSerializer):
@@ -68,6 +61,7 @@ class CreateLessonRecord(serializers.ModelSerializer):
 
 class LessonSerializer(serializers.ModelSerializer):
     lesson_list = LessonRecordSerializer(read_only=True, many=True)
+
     class Meta:
         model = Lesson
         fields = '__all__'
@@ -79,8 +73,7 @@ class GroupListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class GroupDetailSerializer(serializers.ModelSerializer):
-    lesson_group = LessonSerializer(read_only=True, many=True)
+class MonthlyReportSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
+        model = MonthlyReport
         fields = '__all__'
