@@ -7,4 +7,3 @@ admin.site.register(StudentProfile)
 admin.site.register(Group)
 admin.site.register(Lesson)
 admin.site.register(LessonRecord)
-
