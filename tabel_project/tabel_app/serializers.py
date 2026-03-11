@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import (UserProfile, MentorProfile, StudentProfile, Group,
-                     LessonRecord, Lesson)
+from .models import (Admin, MentorProfile, StudentProfile, Group,
+                     Lesson, LessonRecord)
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
@@ -32,19 +32,14 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class AdminListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
-        fields = '__all__'
-
-class UserProfileListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
+        model = Admin
         fields = ['full_name']
 
-class UserProfileDetailSerializer(serializers.ModelSerializer):
+class AdminDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = Admin
         fields = '__all__'
 
 class MentorProfileSerializer(serializers.ModelSerializer):
@@ -59,24 +54,27 @@ class StudentProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'parent_name', 'parent_phone']
 
 
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['id', 'course_name', 'duration', 'mentor', 'study_days']
-
-
-class LessonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lesson
-        fields = ['id', 'data']
-
-
 class LessonRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonRecord
         fields = '__all__'
 
 
-class DifySerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
+    lesson_list = LessonRecordSerializer(read_only=True, many=True)
     class Meta:
+        model = Lesson
+        fields = '__all__'
+
+
+class GroupListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class GroupDetailSerializer(serializers.ModelSerializer):
+    lesson_group = LessonSerializer(read_only=True, many=True)
+    class Meta:
+        model = Group
         fields = '__all__'

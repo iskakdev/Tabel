@@ -1,7 +1,8 @@
-from .models import UserProfile, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
-from .serializers import (UserProfileSerializer, UserProfileListSerializer,
-                          UserProfileDetailSerializer, MentorProfileSerializer, StudentProfileSerializer,
-                          GroupSerializer, LessonSerializer, LessonRecordSerializer, LoginSerializer)
+from .models import Admin, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
+from .serializers import (AdminListSerializer,
+                          AdminDetailSerializer, MentorProfileSerializer, StudentProfileSerializer,
+                          LessonSerializer, LessonRecordSerializer, LoginSerializer,
+                          GroupListSerializer, GroupDetailSerializer)
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -31,21 +32,17 @@ class LogoutView(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserProfileAPIViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+class AdminDetailAPIView(generics.RetrieveAPIView):
+    queryset = Admin.objects.all()
+    serializer_class = AdminDetailSerializer
+
+
+class AdminListAPIView(generics.ListAPIView):
+    queryset = Admin.objects.all()
+    serializer_class = AdminListSerializer
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
-
-class UserProfileDetailAPIView(generics.RetrieveAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileDetailSerializer
-
-
-class UserProfileListAPIView(generics.ListAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileListSerializer
+        return Admin.objects.filter(id = self.request.user.id)
 
 
 class MentorProfileViewSet(viewsets.ModelViewSet):
@@ -53,18 +50,14 @@ class MentorProfileViewSet(viewsets.ModelViewSet):
     serializer_class = MentorProfileSerializer
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
+        return Admin.objects.filter(id = self.request.user.id)
 
 class StudentProfileViewSet(viewsets.ModelViewSet):
     queryset = StudentProfile.objects.all()
     serializer_class =  StudentProfileSerializer
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id = self.request.user.id)
-
-class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+        return Admin.objects.filter(id = self.request.user.id)
 
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
@@ -73,3 +66,11 @@ class LessonViewSet(viewsets.ModelViewSet):
 class LessonRecordViewSet(viewsets.ModelViewSet):
     queryset = LessonRecord.objects.all()
     serializer_class = LessonRecordSerializer
+
+class GroupListAPIView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupListSerializer
+
+class GroupDetailAPIView(generics.RetrieveAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupDetailSerializer

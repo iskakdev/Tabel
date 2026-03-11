@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import UserProfile, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
+from .models import Admin, MentorProfile, StudentProfile, Group, Lesson, LessonRecord
 
-
-admin.site.register(UserProfile)
+admin.site.register(Admin)
 admin.site.register(MentorProfile)
 admin.site.register(StudentProfile)
 admin.site.register(Group)
