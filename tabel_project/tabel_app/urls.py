@@ -1,14 +1,16 @@
 from rest_framework import routers
 from django.urls import path, include
-from .views import (CustomLoginView, LogoutView, MentorProfileViewSet,
-                    StudentProfileViewSet, LessonViewSet,
-                    LessonRecordCreateAPIView, LessonRecordEditAPIView,
-                    GroupListAPIView, GroupDetailAPIView,
-                    MonthlyReportListAPIView, MoveStudentAPIView)
+from .views import (
+    CustomLoginView, LogoutView,
+    MentorProfileViewSet, StudentProfileViewSet, LessonViewSet,
+    LessonRecordCreateAPIView, LessonRecordEditAPIView,
+    GroupListAPIView, GroupDetailAPIView,
+    MonthlyReportListAPIView, MoveStudentAPIView,
+)
 
 router = routers.SimpleRouter()
 router.register(r'mentor', MentorProfileViewSet)
-router.register(r'student', StudentProfileViewSet)
+router.register(r'student', StudentProfileViewSet, basename='student')
 router.register(r'lesson', LessonViewSet)
 
 urlpatterns = [
@@ -20,4 +22,5 @@ urlpatterns = [
     path('group/', GroupListAPIView.as_view(), name='group_list'),
     path('group/<int:pk>/', GroupDetailAPIView.as_view(), name='group_detail'),
     path('monthly-report/', MonthlyReportListAPIView.as_view(), name='monthly_report'),
-    path('admin/move-student/', MoveStudentAPIView.as_view(), name='move_student')]
+    path('admin/move-student/', MoveStudentAPIView.as_view(), name='move_student'),
+]

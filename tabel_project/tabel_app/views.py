@@ -1,7 +1,9 @@
-from .models import (MentorProfile, StudentProfile, Group, Lesson, LessonRecord, MonthlyReport)
-from .serializers import (MentorProfileSerializer, StudentProfileSerializer, StudentProfileAdminSerializer,
-                          LessonSerializer, LessonRecordSerializer, LoginSerializer, GroupListSerializer,
-                          MonthlyReportSerializer)
+from .models import MentorProfile, StudentProfile, Group, Lesson, LessonRecord, MonthlyReport
+from .serializers import (
+    MentorProfileSerializer, StudentProfileSerializer, StudentProfileAdminSerializer,
+    LessonSerializer, LessonRecordSerializer,
+    LoginSerializer, GroupListSerializer, MonthlyReportSerializer,
+)
 from .permissions import IsMentorOrAdmin
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -57,7 +59,6 @@ class MentorProfileViewSet(viewsets.ModelViewSet):
 
 
 class StudentProfileViewSet(viewsets.ModelViewSet):
-    queryset = StudentProfile.objects.all()
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
@@ -144,33 +145,28 @@ class GroupDetailAPIView(GroupQuerySetMixin, generics.RetrieveAPIView):
         students_data = []
         for student in students:
             student_records = records_by_student.get(student.pk, [])
-            grades_by_date = {}
-            total, count, late_count, total_late_min = 0, 0, 0, 0
+            attendance_by_date = {}
+            visit_count = 0
+            late_count = 0
+            total_late_min = 0
 
             for r in student_records:
-                grades_by_date[str(r.lesson.date)] = {
-                    'grade': r.grade,
+                attendance_by_date[str(r.lesson.date)] = {
                     'attendance': r.attendance,
                     'late_minutes': r.late_minutes,
                 }
+                if r.attendance == 'present':
+                    visit_count += 1
                 if r.attendance == 'late':
                     late_count += 1
                     total_late_min += r.late_minutes or 0
-                if r.attendance == 'absent':
-                    continue
-                grade_str = r.grade.replace('+', '').replace('-', '')
-                if grade_str.isdigit():
-                    total += int(grade_str)
-                    count += 1
 
             students_data.append({
                 'full_name': student.user.get_full_name(),
-                'total_grade': total,
-                'average_grade': round(total / count, 2) if count > 0 else 0,
-                'visit_count': count,
+                'visit_count': visit_count,
                 'late_count': late_count,
                 'total_late_minutes': total_late_min,
-                'grades': grades_by_date,
+                'attendance': attendance_by_date,
             })
 
         return Response({

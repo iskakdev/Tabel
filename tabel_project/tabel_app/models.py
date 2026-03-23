@@ -62,7 +62,6 @@ class LessonRecord(models.Model):
     ]
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='records')
-    grade = models.CharField(max_length=3, blank=True)
     attendance = models.CharField(max_length=10, choices=ATTENDANCE_CHOICES, default='present')
     late_minutes = models.PositiveIntegerField(null=True, blank=True)
 
@@ -79,9 +78,8 @@ class MonthlyReport(models.Model):
     student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     month = models.DateField()
-    total_grade = models.IntegerField(default=0)
     visit_count = models.IntegerField(default=0)
-    average_grade = models.FloatField(default=0.0)
+    late_count = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ('student', 'group', 'month')

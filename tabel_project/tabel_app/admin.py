@@ -32,13 +32,13 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(LessonRecord)
 class LessonRecordAdmin(admin.ModelAdmin):
-    list_display = ('student', 'lesson', 'grade', 'attendance', 'late_minutes')
+    list_display = ('student', 'lesson', 'attendance', 'late_minutes')
     list_filter = ('attendance',)
     search_fields = ('student__user__first_name', 'student__user__last_name')
 
 
 @admin.register(MonthlyReport)
 class MonthlyReportAdmin(admin.ModelAdmin):
-    list_display = ('student', 'group', 'month', 'average_grade', 'visit_count')
+    list_display = ('student', 'group', 'month', 'visit_count', 'late_count')
     list_filter = ('group',)
     ordering = ('-month',)
